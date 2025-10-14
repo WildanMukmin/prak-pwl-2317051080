@@ -35,7 +35,7 @@ class UserController extends Controller
             'nim' => $request->input('npm'),
             'kelas_id' => $request->input('kelas_id'),
         ]);
-        return redirect()->to('/user');
+        return redirect()->to('/user')->with('success', 'Mahasiswa berhasil ditambahkan');
     }
 
     public function index(){
@@ -44,5 +44,29 @@ class UserController extends Controller
             'users' => $this->userModel->getUser(),
         ];
         return view('list_user', $data);
+    }
+
+    public function edit($id){
+        $user = UserModel::findOrFail($id); // Define the $user variable here
+        return view('edit_user', [
+            'title' => 'Edit User',
+            'user' => $user,
+            'kelas' => $this->kelasModel->getKelas(),]);
+    }
+
+    public function update(Request $request, $id){
+        $user = UserModel::findOrFail($id);
+        $user->update([
+            'nama' => $request->input('nama'),
+            'nim' => $request->input('npm'),
+            'kelas_id' => $request->input('kelas_id'),
+        ]);
+        return redirect()->to('/user')->with('success', 'Mahasiswa berhasil diperbarui');
+    }
+
+    public function destroy($id){
+        $user = UserModel::findorfail($id);
+        $user->delete();
+        return redirect()->to('/user')->with('success', 'Mahasiswa berhasil dihapus');
     }
 }

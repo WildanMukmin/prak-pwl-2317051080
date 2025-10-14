@@ -2,27 +2,18 @@
 
 @section('content')
     <div class="container">
-        <h1>Daftar Mata Kuliah</h1>
-        <a href="{{ route('matakuliah.create') }}">Tambah Mata Kuliah Baru</a>
-        <br><br>
+        <h1>Buat Mata Kuliah Baru</h1>
 
-        <table border="1" cellpadding="10" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nama Mata Kuliah</th>
-                    <th>SKS</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($mks as $mk)
-                    <tr>
-                        <td>{{ $mk->id }}</td>
-                        <td>{{ $mk->nama_mk }}</td>
-                        <td>{{ $mk->sks }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <form action="{{ route('matakuliah.store') }}" method="POST">
+            @csrf
+
+            <label for="nama_mk">Nama Mata Kuliah:</label><br>
+            <input type="text" id="nama_mk" name="nama_mk" required><br><br>
+
+            <label for="sks">SKS:</label><br>
+            <input type="number" id="sks" name="sks" required><br><br>
+
+            <button type="submit">Submit</button>
+        </form>
     </div>
 @endsection

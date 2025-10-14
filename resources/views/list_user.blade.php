@@ -12,6 +12,59 @@
             <p class="text-gray-600 text-sm">Berikut adalah daftar Mahasiswa yang telah terdaftar dalam sistem.</p>
         </div>
 
+        <!-- Notifikasi -->
+        @if ($message = session()->get('success'))
+            <div
+                class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-green-50 border border-green-200 shadow-md animate-fade-in">
+                <div class="flex-shrink-0 text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2l4 -4m6 2a9 9 0 1 1 -18 0a9 9 0 0 1 18 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3 text-green-800 font-medium">{{ $message }}</div>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-green-400 hover:text-green-600">
+                    ✕
+                </button>
+            </div>
+        @endif
+
+        @if ($message = session()->get('error'))
+            <div
+                class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 shadow-md animate-fade-in">
+                <div class="flex-shrink-0 text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856a2 2 0 0 0 1.789 -2.894l-6.928 -12a2 2 0 0 0 -3.578 0l-6.928 12a2 2 0 0 0 1.789 2.894z" />
+                    </svg>
+                </div>
+                <div class="ml-3 text-red-800 font-medium">{{ $message }}</div>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-red-400 hover:text-red-600">
+                    ✕
+                </button>
+            </div>
+        @endif
+
+        @if ($message = session()->get('warning'))
+            <div
+                class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-yellow-50 border border-yellow-200 shadow-md animate-fade-in">
+                <div class="flex-shrink-0 text-yellow-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856a2 2 0 0 0 1.789 -2.894l-6.928 -12a2 2 0 0 0 -3.578 0l-6.928 12a2 2 0 0 0 1.789 2.894z" />
+                    </svg>
+                </div>
+                <div class="ml-3 text-yellow-800 font-medium">{{ $message }}</div>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-yellow-400 hover:text-yellow-600">
+                    ✕
+                </button>
+            </div>
+        @endif
+
+
         <!-- Card Tabel -->
         <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-3xl overflow-hidden border border-blue-100">
 
@@ -38,17 +91,29 @@
                 <table class="min-w-full table-auto text-gray-700">
                     <thead class="bg-blue-100/70 text-blue-900 uppercase text-sm font-semibold tracking-wider">
                         <tr>
+                            <th class="px-6 py-4 text-left">ID</th>
                             <th class="px-6 py-4 text-left">Nama Lengkap</th>
                             <th class="px-6 py-4 text-left">NIM</th>
                             <th class="px-6 py-4 text-left">Kelas</th>
+                            <th class="px-6 py-4 text-left">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         @foreach ($users as $user)
                             <tr class="hover:bg-blue-50 transition">
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ $user->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ $user->nama }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $user->nim }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $user->kelas->nama_kelas ?? '-' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="{{ route('user.edit', $user->id) }}" class="text-blue-600 hover:underline">Edit</a>
+                                    <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button onclick="return confirm('Apakah Anda yakin ingin menghapus mahasiswa ini?')"
+                                            type="submit" class="text-red-600 hover:underline">Hapus</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
