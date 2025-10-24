@@ -1,6 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
+    {{-- Navbar --}}
     @include('components.navbar')
 
     <div
@@ -13,67 +12,43 @@
         </div>
 
         <!-- Notifikasi -->
-        @if ($message = session()->get('success'))
-            <div
-                class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-green-50 border border-green-200 shadow-md animate-fade-in">
-                <div class="flex-shrink-0 text-green-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2l4 -4m6 2a9 9 0 1 1 -18 0a9 9 0 0 1 18 0z" />
-                    </svg>
+        @foreach (['success' => 'green', 'error' => 'red', 'warning' => 'yellow'] as $type => $color)
+            @if ($message = session()->get($type))
+                <div
+                    class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-{{ $color }}-50 border border-{{ $color }}-200 shadow-md animate-fade-in">
+                    <div class="flex-shrink-0 text-{{ $color }}-500">
+                        @if ($type === 'success')
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2l4 -4m6 2a9 9 0 1 1 -18 0a9 9 0 0 1 18 0z" />
+                            </svg>
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856a2 2 0 0 0 1.789 -2.894l-6.928 -12a2 2 0 0 0 -3.578 0l-6.928 12a2 2 0 0 0 1.789 2.894z" />
+                            </svg>
+                        @endif
+                    </div>
+                    <div class="ml-3 text-{{ $color }}-800 font-medium">{{ $message }}</div>
+                    <button onclick="this.parentElement.remove()" class="ml-auto text-{{ $color }}-400 hover:text-{{ $color }}-600">
+                        ✕
+                    </button>
                 </div>
-                <div class="ml-3 text-green-800 font-medium">{{ $message }}</div>
-                <button onclick="this.parentElement.remove()" class="ml-auto text-green-400 hover:text-green-600">
-                    ✕
-                </button>
-            </div>
-        @endif
-
-        @if ($message = session()->get('error'))
-            <div
-                class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 shadow-md animate-fade-in">
-                <div class="flex-shrink-0 text-red-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856a2 2 0 0 0 1.789 -2.894l-6.928 -12a2 2 0 0 0 -3.578 0l-6.928 12a2 2 0 0 0 1.789 2.894z" />
-                    </svg>
-                </div>
-                <div class="ml-3 text-red-800 font-medium">{{ $message }}</div>
-                <button onclick="this.parentElement.remove()" class="ml-auto text-red-400 hover:text-red-600">
-                    ✕
-                </button>
-            </div>
-        @endif
-
-        @if ($message = session()->get('warning'))
-            <div
-                class="flex items-center max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-yellow-50 border border-yellow-200 shadow-md animate-fade-in">
-                <div class="flex-shrink-0 text-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856a2 2 0 0 0 1.789 -2.894l-6.928 -12a2 2 0 0 0 -3.578 0l-6.928 12a2 2 0 0 0 1.789 2.894z" />
-                    </svg>
-                </div>
-                <div class="ml-3 text-yellow-800 font-medium">{{ $message }}</div>
-                <button onclick="this.parentElement.remove()" class="ml-auto text-yellow-400 hover:text-yellow-600">
-                    ✕
-                </button>
-            </div>
-        @endif
+            @endif
+        @endforeach
 
 
         <!-- Card Tabel -->
         <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-3xl overflow-hidden border border-blue-100">
 
-            <!-- Header Tabel (search & tombol) -->
+            <!-- Header Tabel -->
             <div
                 class="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-700 via-blue-600 to-sky-500 text-white">
                 <h2 class="text-lg font-semibold tracking-wide">Tabel Data Mahasiswa</h2>
 
-                <!-- Search Bar (dummy) -->
+                <!-- Search Bar -->
                 <div class="relative w-full sm:w-64">
                     <input type="text" placeholder="Cari nama atau NIM..."
                         class="w-full pl-10 pr-4 py-2 rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 focus:outline-none">
@@ -99,7 +74,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @foreach ($users as $user)
+                        @forelse ($users as $user)
                             <tr class="hover:bg-blue-50 transition">
                                 <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ $user->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ $user->nama }}</td>
@@ -115,18 +90,23 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-6 text-gray-500">Belum ada data mahasiswa.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             <!-- Footer Tabel -->
             <div class="px-6 py-4 bg-gray-50 text-sm text-gray-500 flex justify-between items-center">
-                <span>Menampilkan {{ count($users) }} Mahasiswa terdaftar</span>
+                <span>Menampilkan {{ $users->count() }} Mahasiswa terdaftar</span>
                 <span class="italic">Diperbarui terakhir: {{ now()->format('d M Y, H:i') }}</span>
             </div>
         </div>
     </div>
 
+    {{-- Footer --}}
     @include('components.footer')
-@endsection
+</x-app-layout>
